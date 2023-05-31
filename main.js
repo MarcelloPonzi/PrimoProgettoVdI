@@ -1,5 +1,28 @@
 function creaStelle() {
-    // Legge il file json e scala le posizioni
+    var screenWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+    var screenHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+    var svgWidth = 2000;
+    var svgHeight = 1000;
+
+    var scaleX = d3.scaleLinear()
+        .domain([0, svgWidth])
+        .range([0, screenWidth]);
+
+    var scaleY = d3.scaleLinear()
+        .domain([0, svgHeight])
+        .range([0, screenHeight]);
+
+    var scaledSvgWidth = scaleX(svgWidth)
+    var scaledSvgHeight = scaleY(svgHeight)
+
+    var scaleStarX = d3.scaleLinear()
+        .domain([0, 2000])
+        .range([0, scaledSvgWidth])
+
+    var scaleStarY = d3.scaleLinear()
+        .domain([0, 1000])
+        .range([0, scaledSvgHeight])
+
     var ArrayInputPos1 = new Array(10);
     var ArrayInputPos2 = new Array(10);
     var ArrayInputPos3 = new Array(10);
@@ -15,23 +38,23 @@ function creaStelle() {
     d3.json("pos-stelle.json")
         .then(json => {
             // Esempio: Stampare i dati del file JSON sulla console
-            //console.log(json);
+
 
             for (let i = 0; i < json.stelle.length; i++) {
-                ArrayInputPos1[i].x = parseInt(json.stelle[i].posizioni[0].x);
-                ArrayInputPos1[i].y = parseInt(json.stelle[i].posizioni[0].y);
-                ArrayInputPos2[i].x = parseInt(json.stelle[i].posizioni[1].x);
-                ArrayInputPos2[i].y = parseInt(json.stelle[i].posizioni[1].y);
-                ArrayInputPos3[i].x = parseInt(json.stelle[i].posizioni[2].x);
-                ArrayInputPos3[i].y = parseInt(json.stelle[i].posizioni[2].y);
+                ArrayInputPos1[i].x = scaleStarX(parseInt(json.stelle[i].posizioni[0].x));
+                ArrayInputPos1[i].y = scaleStarY(parseInt(json.stelle[i].posizioni[0].y));
+                ArrayInputPos2[i].x = scaleStarX(parseInt(json.stelle[i].posizioni[1].x));
+                ArrayInputPos2[i].y = scaleStarY(parseInt(json.stelle[i].posizioni[1].y));
+                ArrayInputPos3[i].x = scaleStarX(parseInt(json.stelle[i].posizioni[2].x));
+                ArrayInputPos3[i].y = scaleStarY(parseInt(json.stelle[i].posizioni[2].y));
             }
 
             for (let i = 0; i < ArrayInputPos1.length; i++) {
                 // Seleziona l'elemento SVG dove verrà disegnata la stella
                 const svg = d3.select("svg")
                     //Crea uno sfondo rosso
-                    .attr('width', 2000)
-                    .attr('height', 1000)
+                    .attr('width', scaledSvgWidth)
+                    .attr('height', scaledSvgHeight)
                     .style('background-color', 'grey')
                     .on("click", function () {
                         muoviStelle();
@@ -40,32 +63,29 @@ function creaStelle() {
 
                 posx = ArrayInputPos1[i].x
                 posy = ArrayInputPos1[i].y
-                console.log(posx)
-                console.log(posy)
 
                 // Definisci le coordinate dei vertici della stella
                 const vertices = [
-                    [50, 0],
-                    [61, 35],
-                    [98, 35],
-                    [68, 57],
-                    [79, 91],
-                    [50, 70],
-                    [21, 91],
-                    [32, 57],
-                    [2, 35],
-                    [39, 35],
-                    [50, 0]
+                    [scaleStarX(50), scaleStarY(0)],
+                    [scaleStarX(61), scaleStarY(35)],
+                    [scaleStarX(98), scaleStarY(35)],
+                    [scaleStarX(68), scaleStarY(57)],
+                    [scaleStarX(79), scaleStarY(91)],
+                    [scaleStarX(50), scaleStarY(70)],
+                    [scaleStarX(21), scaleStarY(91)],
+                    [scaleStarX(32), scaleStarY(57)],
+                    [scaleStarX(2), scaleStarY(35)],
+                    [scaleStarX(39), scaleStarY(35)],
+                    [scaleStarX(50), scaleStarY(0)]
                 ];
+                console.log(scaleStarX(50))
 
                 var colorScale = d3.scaleLinear()
                     .domain([0, svg.attr("height")]) // Intervallo delle posizioni y
                     .range(["green", "red"]); // Gamma dei colori
 
                 // Crea la funzione generatrice di linee di D3
-                const lineGenerator = d3.line()
-                    //.curve(d3.curveBasis); // Specifica la curva Bezier cubica
-                    ;
+                const lineGenerator = d3.line();
 
                 // Disegna la stella come un percorso
                 svg.append("path")
@@ -74,8 +94,6 @@ function creaStelle() {
                     .attr("transform", "translate(" + posx + "," + posy + ")")
                     .attr("fill", function (d) { return colorScale(posy); })
                     .attr("stroke", function (d) { return colorScale(posy); })
-
-
             }
 
         })
