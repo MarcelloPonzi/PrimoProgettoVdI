@@ -12,11 +12,11 @@ function creaStelle() {
     //Scale per l'svg
     var scaleX = d3.scaleLinear()
         .domain([0, svgWidth])
-        .range([0, screenWidth-50]);
+        .range([0, screenWidth - 50]);
 
     var scaleY = d3.scaleLinear()
         .domain([0, svgHeight])
-        .range([0, screenHeight-50]);
+        .range([0, screenHeight - 50]);
 
     var scaledSvgWidth = scaleX(svgWidth)
     var scaledSvgHeight = scaleY(svgHeight)
@@ -101,17 +101,11 @@ function creaStelle() {
                     [50, 0]
                 ];
 
-                var scaledVertices = vertices.map(function(array) {
+                var scaledVertices = vertices.map(function (array) {
                     return [scaleStarX(array[0]), scaleStarY(array[1])];
-                  });
-
-                //Scala di colori basata sull'altezza
-                var colorScale = d3.scaleLinear()
-                    .domain([0, svg.attr("height")])
-                    .range(["green", "red"]);
+                });
 
                 const lineGenerator = d3.line();
-
                 posx = scaledPos1[i].x
                 posy = scaledPos1[i].y
 
@@ -120,14 +114,26 @@ function creaStelle() {
                     .attr("class", "stella" + i)
                     .attr("d", lineGenerator(scaledVertices))
                     .attr("transform", "translate(" + posx + "," + posy + ")")
-                    .attr("fill", function (d) { return colorScale(posy); })
-                    .attr("stroke", function (d) { return colorScale(posy); })
+                    .attr("fill", function (d) { return generaColore(i); })
+                    .attr("stroke", function (d) { return generaColore(i); })
             }
 
         })
         .catch(error => {
             console.error(error);
         });
+
+    function generaColore(i) {
+        // Crea la scala di colori
+        var scalaColori = d3.scaleSequential()
+            .domain([0, 9])
+            .interpolator(d3.interpolateHcl('green', 'red')); // Puoi cambiare l'interpolator a seconda del tipo di colori desiderato
+
+        // Genera il colore per il valore i
+        var coloreGenerato = scalaColori(i);
+
+        return coloreGenerato;
+    }
 
     //Sposta le stelle utilizzando il corretto array in base alla variabile "nextPos"
     function muoviStelle(scaledPos1, scaledPos2, scaledPos3) {
