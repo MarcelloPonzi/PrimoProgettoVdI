@@ -1,6 +1,6 @@
 function creaStelle() {
 
-    const jsonPath = "pos-stelle2.json";
+    const jsonPath = "pos-stelleoutliner.json";
     //Legge le dimensioni dello schermo dell'utente
     var screenWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
     var screenHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
@@ -126,7 +126,7 @@ function creaStelle() {
     function generaColore(i) {
         // Crea la scala di colori
         var scalaColori = d3.scaleSequential()
-            .domain([0, 9])
+            .domain([0, ArrayInputPos1.length])
             .interpolator(d3.interpolateHcl('green', 'red')); // Puoi cambiare l'interpolator a seconda del tipo di colori desiderato
 
         // Genera il colore per il valore i
