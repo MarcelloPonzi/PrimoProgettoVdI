@@ -1,12 +1,12 @@
 function creaStelle() {
 
-    const jsonPath = "pos-stelleoutliner.json";
+    const jsonPath = "pos-stelleoutlier.json";
     //Legge le dimensioni dello schermo dell'utente
     var screenWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
     var screenHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
 
     //Misure di riferimento dell'svg
-    var svgWidth = 2;
+    var svgWidth = 1;
     var svgHeight = 1;
 
     //Scale per l'svg
